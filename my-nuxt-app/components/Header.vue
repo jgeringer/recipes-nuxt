@@ -5,6 +5,7 @@
                 <li><nuxt-link to="/">Start Page</nuxt-link></li>
                 <li><nuxt-link to="/recipes">Recipes</nuxt-link></li>
                 <li><nuxt-link to="/about">About</nuxt-link></li>
+                <li><nuxt-link to="/users">Users</nuxt-link></li>
             </ul>
         </nav>
     </header>
