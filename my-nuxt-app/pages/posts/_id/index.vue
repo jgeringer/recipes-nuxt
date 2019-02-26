@@ -1,12 +1,12 @@
 <template>
     <div class="single-post-page">
         <section class="post">
-            <h1 class="post-title">Title of the Post</h1>
+            <h1 class="post-title">{{ loadedPost.title }}</h1>
             <div class="post-details">
-                <div class="post-detail">Last updated on XXX</div>
-                <div class="post-detail">Written by NAME</div>
+                <div class="post-detail">Last updated on {{loadedPost.updatedDate}}</div>
+                <div class="post-detail">Written by {{loadedPost.author}}</div>
             </div>
-            <p class="post-content">Content of the post</p>
+            <p class="post-content">{{loadedPost.content}}</p>
         </section>
         <section class="post-feedback">
             <p>Let me know what you think about hte post, send a mail to <a href="mailto:feedback@awesome.com">feedback</a></p>
@@ -16,7 +16,20 @@
 
 <script>
 export default {
-
+  asyncData(context, callback) {
+    setTimeout(() => {
+      callback(null, {
+        loadedPost: { 
+          id: '2', 
+          title: 'Not first Post (ID: ' + context.route.params.id + ')', // note: context is used here to retrieve params.id because you can't use 'this' inside of asyncData
+          previewText: 'This is our second post!', 
+          content: 'some dummy text', 
+          author: 'Joe', 
+          updatedDate: new Date(), 
+          thumbnail: 'https://images.pexels.com/photos/1161446/pexels-photo-1161446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=860' }
+      })
+    }, 1000)
+  },
 }
 </script>
 

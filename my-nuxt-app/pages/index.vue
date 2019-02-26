@@ -5,18 +5,7 @@
       <section class="intro">
         <h1>Get the latest tech news!</h1>
       </section>
-      <section class="featured-posts">
-        <PostPreview 
-          id="1" 
-          thumbnail="https://files.pitchbook.com/website/images/content/Chip_board.png"
-          title="Hello There!"
-          previewText="This is my first post!" />
-        <PostPreview 
-          id="2" 
-          thumbnail="https://images.techhive.com/images/article/2016/11/computerworld_tech_forecast_2017_hottest-tech-skills-for-2017-100692085-large.jpg"
-          title="AI Is Here"
-          previewText="Yet another post about AI" />
-      </section>      
+      <PostList :posts="loadedPosts" />
     </div>
 
     <div>
@@ -51,11 +40,40 @@
 </template>
 
 <script>
-import PostPreview from '@/components/Posts/PostPreview'
+import PostList from '@/components/Posts/PostList'
 
 export default {
   components: {
-    PostPreview
+    PostList
+  },
+  data(){
+    return {
+      loadedPosts: []
+    }
+  },
+  created(){
+    // fake ajax: Not part of the server renedered nuxt static code
+    // setTimeout(() => {
+    //   this.loadedPosts = [
+    //     { id: '1', title: 'First Post', previewText: 'This is our first post!', thumbnail: 'https://files.pitchbook.com/website/images/content/Chip_board.png' },
+    //     { id: '2', title: 'Not first Post', previewText: 'This is our second post!', thumbnail: 'https://images.pexels.com/photos/1161446/pexels-photo-1161446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=860' },
+    //     { id: '3', title: 'A third Post', previewText: 'This is our third post!', thumbnail: 'https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }
+    //   ]
+    // }, 1500)
+  },
+  //only works in Pages... (ajax, that runs on the server)
+  asyncData(context, callback) { //note: 'this' does not work here because it's run before this component is created
+    console.log('asyncData is executing')
+    console.log('context:', context) // context is usefull for getting things like the route, and other 'this' things. 
+    setTimeout(() => {
+      callback(null, {  //null is the error
+        loadedPosts : [ // <- this is the data from the client
+            { id: '1', title: 'First Post', previewText: 'This is our first post!', thumbnail: 'https://files.pitchbook.com/website/images/content/Chip_board.png' },
+            { id: '2', title: 'Not first Post', previewText: 'This is our second post!', thumbnail: 'https://images.pexels.com/photos/1161446/pexels-photo-1161446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=860' },
+            { id: '3', title: 'A third Post', previewText: 'This is our third post!', thumbnail: 'https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }
+        ]
+      })
+    }, 1500);
   }
 }
 </script>
@@ -68,6 +86,7 @@ export default {
   box-sizing: border-box;
   background-position: center;
   background-size: cover;
+  background-image: url('~assets/images/main-page-background.jpg');
 }
 
 .intro h1 {
