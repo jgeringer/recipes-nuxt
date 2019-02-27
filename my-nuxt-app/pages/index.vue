@@ -46,35 +46,12 @@ export default {
   components: {
     PostList
   },
-  data(){
-    return {
-      loadedPosts: []
+  computed: {
+    loadedPosts() {
+      return this.$store.getters.loadedPosts
     }
-  },
-  created(){
-    // fake ajax: Not part of the server renedered nuxt static code
-    // setTimeout(() => {
-    //   this.loadedPosts = [
-    //     { id: '1', title: 'First Post', previewText: 'This is our first post!', thumbnail: 'https://files.pitchbook.com/website/images/content/Chip_board.png' },
-    //     { id: '2', title: 'Not first Post', previewText: 'This is our second post!', thumbnail: 'https://images.pexels.com/photos/1161446/pexels-photo-1161446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=860' },
-    //     { id: '3', title: 'A third Post', previewText: 'This is our third post!', thumbnail: 'https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }
-    //   ]
-    // }, 1500)
-  },
-  //only works in Pages... (ajax, that runs on the server)
-  asyncData(context, callback) { //note: 'this' does not work here because it's run before this component is created
-    console.log('asyncData is executing')
-    console.log('context:', context) // context is usefull for getting things like the route, and other 'this' things. 
-    setTimeout(() => {
-      callback(null, {  //null is the error
-        loadedPosts : [ // <- this is the data from the client
-            { id: '1', title: 'First Post', previewText: 'This is our first post!', thumbnail: 'https://files.pitchbook.com/website/images/content/Chip_board.png' },
-            { id: '2', title: 'Not first Post', previewText: 'This is our second post!', thumbnail: 'https://images.pexels.com/photos/1161446/pexels-photo-1161446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=860' },
-            { id: '3', title: 'A third Post', previewText: 'This is our third post!', thumbnail: 'https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }
-        ]
-      })
-    }, 1500);
   }
+  
 }
 </script>
 
