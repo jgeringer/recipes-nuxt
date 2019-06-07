@@ -1,38 +1,69 @@
-import Vuex from 'vuex'
+import Vuex from "vuex";
+import axios from "axios";
 
 const createStore = () => {
-    return new Vuex.Store({
-        state: {
-            loadedPosts: []
-        },
-        mutations: {
-            setPosts(state, posts) {
-                state.loadedPosts = posts
+  return new Vuex.Store({
+    state: {
+      loadedPosts: []
+    },
+    mutations: {
+      setPosts(state, posts) {
+        state.loadedPosts = posts;
+      },
+      addPost(state, post) {
+        state.loadedPosts.push(post)
+      },
+      editPost(state, editedPost) {
+        const postIndex = state.loadedPosts.findIndex(
+          post => post.id === editedPost.id
+        );
+        state.loadedPosts[postIndex] = editedPost
+      }
+    },
+    actions: {
+      nuxtServerInit(vuexContext, context) {
+        return axios
+          .get("https://nuxt-blog-9132f.firebaseio.com/posts.json")
+          .then(res => {
+            const postsArray = [];
+            for (const key in res.data) {
+              postsArray.push({ ...res.data[key], id: key });
             }
-        },
-        actions: {
-            nuxtServerInit(vuexContext, context) {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        vuexContext.commit('setPosts', [
-                            { id: '1', title: 'First Post', previewText: 'This is our first post!', thumbnail: 'https://files.pitchbook.com/website/images/content/Chip_board.png' },
-                            { id: '2', title: 'Not first Post', previewText: 'This is our second post!', thumbnail: 'https://images.pexels.com/photos/1161446/pexels-photo-1161446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=860' },
-                            { id: '3', title: 'A third Post', previewText: 'This is our third post!', thumbnail: 'https://images.pexels.com/photos/351448/pexels-photo-351448.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }
-                        ]);
-                        resolve();
-                    }, 1000);
-                });
-            },
-            setPosts(vuexContext, posts) {
-                vuexContext.commit('setPosts', posts)
-            }
-        },
-        getters: {
-            loadedPosts(state) {
-                return state.loadedPosts
-            }
+            vuexContext.commit("setPosts", postsArray);
+          })
+          .catch(e => context.error(e));
+      },
+      addPost(vuexContext, post) {
+        const createdPost = {
+          ...post,
+          updatedDate: new Date()
         }
-    })
-}
+        return axios
+        .post("https://nuxt-blog-9132f.firebaseio.com/posts.json", createdPost)
+        .then(result => {
+          vuexContext.commit('addPost', {...createdPost, id: result.data.name})
+        })
+        .catch(e => console.log(e));
+      },
+      editPost(vuexContext, editedPost) {
+        return axios.put("https://nuxt-blog-9132f.firebaseio.com/posts/" +
+          editedPost.id +
+          ".json", editedPost)
+          .then(res => {
+            vuexContext.commit('editPost', editedPost)
+          })
+          .catch(e => console.log(e))
+      },
+      setPosts(vuexContext, posts) {
+        vuexContext.commit("setPosts", posts);
+      }
+    },
+    getters: {
+      loadedPosts(state) {
+        return state.loadedPosts;
+      }
+    }
+  });
+};
 
-export default createStore
+export default createStore;
