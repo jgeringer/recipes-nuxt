@@ -67,7 +67,8 @@ module.exports = {
     }
   },
   env: {
-    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-9132f.firebaseio.com'
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-9132f.firebaseio.com',
+    firebaseAPIKey: 'AIzaSyDWfAecogrtPlTkqs8gBhxmxQu4MxXXpyA'
   },
   router: {
     linkActiveClass: 'is-active'
@@ -75,5 +76,8 @@ module.exports = {
   transition: {
     name: 'fade',
     mode: 'out-in'
+  },
+  router: {
+    middleware: 'log'
   }
 }
