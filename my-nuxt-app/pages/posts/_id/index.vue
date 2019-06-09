@@ -17,6 +17,13 @@
 <script>
 export default {
   asyncData(context) {
+    // for generate only... so we don't make redundent requests during the generation
+    if (context.payload) {
+      return {
+        loadedPost: context.payload.postData
+      }
+    }
+
     return context.app.$axios
       .$get('/posts/' + context.params.id + '.json')
       .then(data => {

@@ -92,6 +92,8 @@ const createStore = () => {
             Cookie.set('jwt', result.idToken)
             Cookie.set('expirationDate', 
               new Date().getTime() + Number.parseInt(result.expiresIn) * 1000)
+
+            return this.$axios.$post('http://localhost:3000/api/track-data', { data: 'Authenticated!' })
           })
           .catch(e => console.error(e))
       },
@@ -114,9 +116,12 @@ const createStore = () => {
             .split(';')
             .find(c => c.trim().startsWith('expirationDate='))
             .split('=')[1]
-        } else {
+        } else if (process.client) {
           token = localStorage.getItem('token')
           expirationDate = localStorage.getItem('tokenExpiration')
+        } else {
+          token = null
+          expirationDate = null
         }
 
         if (new Date().getTime() > +expirationDate || !token) {
